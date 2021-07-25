@@ -1,16 +1,17 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 
 const Timer = () => {
-    var timer = "00:00:00";
+    const [timer, setTimer] = useState("00:00:00");
+    const [time, setTime] = useState(0);
     var hr = 0;
     var min = 0;
     var sec = 0;
     var stoptime = true;
+    var dontStart = false;
     
     function timerCycle() {
-        console.log(timer)
-        if (stoptime === false) {
+        if (!stoptime) {
             sec = parseInt(sec);
             min = parseInt(min);
             hr = parseInt(hr);
@@ -37,26 +38,30 @@ const Timer = () => {
                 hr = '0' + hr;
             }
 
-            timer = hr + ':' + min + ':' + sec;
+            setTimer(hr + ':' + min + ':' + sec);
 
-            setTimeout( timerCycle, 1000);
+            setTime(setTimeout( timerCycle, 1000));
         }
     }
     const startTimer = () => {
-        if (stoptime === true) {
+        if (stoptime && !dontStart) {
             stoptime = false;
+            dontStart = true;
             timerCycle();
         }
     }
     const stopTimer = () => {
-        if (stoptime === false) {
+        if (stoptime) {
             stoptime = true;
+            dontStart = false;
+            clearTimeout(time);
         }
     }
     
     const resetTimer = () => {
-        timer = "00:00:00";
+        setTimer("00:00:00");
         stoptime = true;
+        clearTimeout(time);
         hr = 0;
         sec = 0;
         min = 0;
